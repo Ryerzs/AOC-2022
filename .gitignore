@@ -1,0 +1,9 @@
+
+*.json
+*.json
+.obsidian
+Templater
+*.vimrc
+*.pdf
+*.pyc
+*.prof
