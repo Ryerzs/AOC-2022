@@ -12,7 +12,7 @@ def day_():
     ans1 = star1(data)
     time2 = time.perf_counter()
 
-    ans2 = star2()
+    ans2 = star2(data)
     time3 = time.perf_counter()
 
     load_time = time1 - start_time
@@ -34,7 +34,7 @@ def get_data(path):
 def star1(data):
     return 0
 
-def star2():
+def star2(data):
     return 0
 
 def main():
