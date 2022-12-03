@@ -2,7 +2,7 @@ import time
 
 def day_():
     path = "data.txt"
-    # path = "test-data.txt"
+    path = "test-data.txt"
 
     start_time = time.perf_counter()
     data = get_data(path)
@@ -26,33 +26,16 @@ def day_():
         print(f'Star 2 answer: {ans2}')
 
 def get_data(path):
-    rounds = []
     with open(path) as f:
         rows = f.read().splitlines()
         for r in rows:
-            moves = r.split(sep=' ')
-            moves = (ord(moves[0]) - ord('A'), ord(moves[1]) - ord('X'))
-            rounds.append(moves)
-    return rounds
+            print(r)
     
-"""
-rounds = [(0,1), (1,0), (2, 2)] <=> [(A,Y), (B,X), (C,Z)]
-Outcome of match for a set of moves is
-(my_move - opponents_move + 1) mod 3
-where 0 is a loss, 1 is a draw, 2 is a win
-"""
-def star1(rounds):
-    return sum([1 + moves[1] + 3*((moves[1]-moves[0]+1)%3) for moves in rounds])
+def star1(data):
+    return 0
 
-"""
-rounds = [(0,1), (1,0), (2, 2)] <=> [(A,Y), (B,X), (C,Z)]
-Solve for my move in the equation
-  (my_move - opponents_move + 1) = outcome (mod 3)
-=>my_move = opponents_move + outcome - 1 (mod 3)
-where 0 is rock, 1 is paper, 2 is scissors
-"""
-def star2(rounds):
-    return sum([1 + 3*moves[1] + ((moves[1]+moves[0]-1)%3) for moves in rounds])
+def star2(data):
+    return 0
 
 def main():
     import cProfile
