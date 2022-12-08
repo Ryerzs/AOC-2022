@@ -26,10 +26,13 @@ def day_():
         print(f'Star 2 answer: {ans2}')
 
 def get_data(path):
+    data = []
     with open(path) as f:
         rows = f.read().splitlines()
-        for r in rows:
-            print(r)
+        for row in rows:
+            print(row)
+            data.append(row)
+    return data
     
 def star1(data):
     return 0
