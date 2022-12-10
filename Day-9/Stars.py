@@ -2,8 +2,9 @@ import time
 import math
 
 def day_():
-    path = "data.txt"
-    path = "Day-9/test-data.txt"
+    path = "Day-9/data.txt"
+    # path = "Day-9/test-data2.txt"
+    # path = "Day-9/test-data3.txt"
 
     start_time = time.perf_counter()
     data = get_data(path)
@@ -46,13 +47,38 @@ def star1(data):
         direction = direction_map[direction]
         for i in range(times):
             head.move_head(direction)
-        count += 1
-        if count >= 20:
-            break
+        # count += 1
+        # if count >= 20:
+        #     break
+        # draw_rope(head, 15)
     positions = head.get_positions()
     print(positions)
     print(str(head))
     return len(positions)
+
+def draw_rope(head, size):
+    positions = []
+    current = head
+    positions.append(current.pos) 
+    while current.tail is not None:
+        current = current.tail
+        positions.append(current.pos) 
+    # print(positions)
+    out = [['.' for i in range(size*2+1)] for i in range(size*2+1)]
+    table = ['9', '8', '7', '6', '5', '4', '3', '2', '1', 'H']
+    positions.reverse()
+    # print(out)
+    out[size][size] = 's'
+    for i, pos in enumerate(positions):
+        x = pos[0] + size
+        y = pos[1] + size
+        out[y][x] = table[i]
+    
+    out.reverse()
+
+    for i, row in enumerate(out, start = 0):
+        print(''.join(row) + str(size-i))
+    print(head.get_positions())
 
 
 def star2(data):
@@ -82,23 +108,50 @@ class Head():
             self.pos = position
             self.positions.add(self.pos)
             return
+        # Figure out if self is going to make diagonal move
+        distance = self.get_distance(self.pos, position)
+        distance_from_tail = self.get_distance(self.tail.pos, position)
+        is_diagonal_move = distance >= 1.1
+        is_in_line = 1.9 <= distance_from_tail <= 2.1
+        # If diagonal move and tail not connected after new position
+        # then tail will move same relative amount as self
         if not self.tail_connected(position, self.tail.pos):
-            self.tail.set_head(self.pos)
+            if is_diagonal_move and is_in_line:
+                offset = (round((position[0] - self.tail.pos[0])/2), round((position[1] - self.tail.pos[1])/2))
+                new_tail_pos = self.get_relative_position(self.tail.pos, offset)
+                pass
+            elif is_diagonal_move:
+                offset = (position[0] - self.pos[0], position[1] - self.pos[1])
+                new_tail_pos = self.get_relative_position(self.tail.pos, offset)
+            else:
+                new_tail_pos = self.pos
+            self.tail.set_head(new_tail_pos)
         self.pos = position
+
     def move_head(self, direction):
-        new_head_pos = (self.pos[0] + direction[0], self.pos[1] + direction[1])
+        new_head_pos = self.get_relative_position(self.pos, direction)
         if not self.tail_connected(new_head_pos, self.tail.pos):
             self.tail.set_head(self.pos)
         self.pos = new_head_pos
 
     def tail_connected(self, head_pos, tail_pos):
-        distance = math.sqrt((head_pos[0]-tail_pos[0])**2 + (head_pos[1]-tail_pos[1])**2)
-        return distance <= 1.9
+        return self.get_distance(head_pos, tail_pos) <= 1.9
+    
+    def get_distance(self, position1, position2):
+        return math.sqrt((position1[0] - position2[0])**2 + (position1[1] - position2[1])**2)
+    
+    def get_relative_position(self, position, offset):
+        return (position[0] + offset[0], position[1] + offset[1])
     
     def get_positions(self):
         if self.tail == None:
             return self.positions 
         return self.tail.get_positions()
+    
+    ## if not connected and keep relative,
+    ## move relative
+    ## if moved horizontal, Keep relative
+    ## Check if not connected
 
 def main():
     import cProfile
