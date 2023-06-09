@@ -14,6 +14,7 @@ def day_():
     ans1 = star1(data)
     time2 = time.perf_counter()
 
+    data = get_data(path)
 
     ans2 = star2(data)
     time3 = time.perf_counter()
@@ -92,6 +93,13 @@ def make_modulo_list(data):
 
 def get_new_worry(item, m, div_by_three = True):
     new_item = {}
+    # i = item[3]
+    # if m["op"][0] == "+":
+    #     i += m["op"][1]
+    # if m["op"][0] == "*":
+    #     i *= m["op"][1]
+    # if m["op"][0] == "^":
+    #     i = i ** m["op"][1]
     three_mod = item[3]
     for div, i in item.items():
         if m["op"][0] == "+":
@@ -101,7 +109,6 @@ def get_new_worry(item, m, div_by_three = True):
         if m["op"][0] == "^":
             i = i ** m["op"][1]
         if div_by_three:
-
             i -= three_mod
         new_item[div] = i % div
     return new_item
@@ -113,6 +120,7 @@ def get_next_monkey(item, m):
         return m["case_false"]
 
 def star2(data):
+    data = make_modulo_list(data)
     counter = {}
     for m in range(len(data)):
         counter[m] = 0
