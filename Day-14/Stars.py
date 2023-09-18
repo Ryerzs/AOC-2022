@@ -5,14 +5,14 @@ def day_():
     path = "test-data.txt"
 
     start_time = time.perf_counter()
-    data = get_data(path)
+    instructions = get_data(path)
 
     time1 = time.perf_counter()
 
-    ans1 = star1(data)
+    ans1 = star1(instructions)
     time2 = time.perf_counter()
 
-    ans2 = star2(data)
+    ans2 = star2(instructions)
     time3 = time.perf_counter()
 
     load_time = time1 - start_time
@@ -26,16 +26,44 @@ def day_():
         print(f'Star 2 answer: {ans2}')
 
 def get_data(path):
-    data = []
+    instructions = []
     with open(path) as f:
         rows = f.read().splitlines()
         for row in rows:
-            print(row)
-            data.append(row)
-    return data
+            new_instruction = [tuple([int(coord) for coord in position.split(",")]) for position in row.split(" -> ")]
+            instructions.append(new_instruction)
+            print(instructions[-1])
+    return instructions
     
-def star1(data):
+def star1(instructions):
+    grid = set()
+    for instruction in instructions:
+        add_line_segment(instruction, grid)
+    print(grid)
+    max_x = max(grid, key=lambda item: item[0])[0]
+    min_x = min(grid, key=lambda item: item[0])[0]
+    max_y = max(grid, key=lambda item: item[1])[1]
+    min_y = min(grid, key=lambda item: item[1]>3)[1]
+    print(min_x, max_x)
+    print(min_y, max_y)
+
     return 0
+
+def add_line_segment(instruction, grid):
+    for c1, c2 in zip(instruction[:-1], instruction[1:]):
+        add_points_between(c1, c2, grid)
+
+def add_points_between(c1, c2, grid):
+    diff_x = c2[0] - c1[0]
+    diff_y = c2[1] - c1[1]
+    if diff_y == 0:
+        sign = int(abs(diff_x)/diff_x)
+        for i in range(abs(diff_x)+1):
+            grid.add((c1[0]+i*sign, c1[1]))
+    elif diff_x == 0:
+        sign = int(abs(diff_y)/diff_y)
+        for j in range(abs(diff_y)+1):
+            grid.add((c1[0], c1[1]+j*sign))
 
 def star2(data):
     return 0
